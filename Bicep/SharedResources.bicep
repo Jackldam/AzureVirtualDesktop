@@ -16,37 +16,30 @@ param AdministratorsGroupID string
 
 targetScope = 'subscription'
 
-module ResourceGroup 'ResourceGroup.bicep' = {
+//Creation ResourceGroup for shared resources
+module ResourceGroup './Modules/ResourceGroup.bicep' = {
   scope: subscription()
-  name: 'ModuleResourceGroup'
+  name: 'SharedResourceResourceGroup'
   params: {
-    ApplicationName: ApplicationName
-    Environment: Environment
+    WorkloadName: 'AVD'
+    ApplicationName: 'SharedResources'
     Location: Location
-    WorkloadName: WorkloadName
+    Environment: 'p'
   }
 }
 
+//Creation Keyvault for shared resources
 module Keyvault './Modules/Keyvault.bicep' = {
   scope: resourceGroup(ResourceGroup.name)
-  name: 'ModuleKeyvault'
+  name: 'SharedResourceKeyVault'
   params: {
-    AdministratorsGroupID: AdministratorsGroupID
-    ApplicationName: ApplicationName
-    Environment: Environment
-    WorkloadName: WorkloadName
+    WorkloadName: 'AVD'
+    ApplicationName: 'SharedResources'
     Location: Location
+    Environment: 'p'
+    AdministratorsGroupID: 'AdministratorsGroupID'
   }
 }
 
-module AVDPool './Modules/AVDPool.bicep' = {
-  scope: resourceGroup(ResourceGroup.name)
-  name: 'AVDPool'
-  params: {
-    ApplicationName: ApplicationName
-    Environment: Environment
-    WorkloadName: WorkloadName
-    Location: Location
-  }
-}
+
 

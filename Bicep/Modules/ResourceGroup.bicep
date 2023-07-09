@@ -20,16 +20,5 @@ resource ResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: Location
 }
 
-// module LogAnalyticsWorkSpace 'LogAnalyticsWorkSpace.bicep' = {
-//   scope:  resourceGroup(ResourceGroup.id)
-//   name: 'Build LogAnalyticsWorkSpace'
-//   params: {
-//     ApplicationName: ApplicationName
-//     Environment: Environment
-//     Location: Location
-//     WorkloadName: WorkloadName
-//   }
-// }
-
 output ResourceGroupName string = ResourceGroup.name
 output ResourceGroupID string = ResourceGroup.id

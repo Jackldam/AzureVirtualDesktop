@@ -1,3 +1,4 @@
-StakeHolders: Jack den Ouden
-Mail: jack@ldam.mnl
-SMTP: smtp.ldam.nl
+StakeHolders: Contoso
+AdministratorsGroupID: 'x-x-x-x-x-x'
+Mail: admin@Contoso.com
+SMTP: smtp.Contoso.com

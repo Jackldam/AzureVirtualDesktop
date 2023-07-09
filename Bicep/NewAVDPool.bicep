@@ -14,18 +14,12 @@ param Environment string
 @description('Required, Administrators securitygroup id')
 param AdministratorsGroupID string
 
-targetScope = 'tenant'
+targetScope = 'subscription'
 
-resource Subscription 'Microsoft.Subscription/aliases@2021-10-01' = {
-  name: 'AzureVirtualDesktop'
-}
-
-// Creation of shared resourcegroup
-module SharedResourceGroup './SharedResources.bicep' = {
-  scope: subscription(Subscription.id)
-  name: 'SharedResourceGroup'
+module ResourceGroup './Modules/ResourceGroup.bicep' = {
+  scope: subscription()
+  name: 'ModuleResourceGroup'
   params: {
-    AdministratorsGroupID: AdministratorsGroupID
     ApplicationName: ApplicationName
     Environment: Environment
     Location: Location
@@ -33,17 +27,26 @@ module SharedResourceGroup './SharedResources.bicep' = {
   }
 }
 
-
-// Creation of new AVDPool
-module NewAVDPool './NewAVDPool.bicep' = {
-  scope: subscription(Subscription.id)
-  name: 'Build New AVD Pool'
+module Keyvault './Modules/Keyvault.bicep' = {
+  scope: resourceGroup(ResourceGroup.name)
+  name: 'ModuleKeyvault'
   params: {
     AdministratorsGroupID: AdministratorsGroupID
     ApplicationName: ApplicationName
     Environment: Environment
-    Location: Location
     WorkloadName: WorkloadName
+    Location: Location
+  }
+}
+
+module AVDPool './Modules/AVDPool.bicep' = {
+  scope: resourceGroup(ResourceGroup.name)
+  name: 'AVDPool'
+  params: {
+    ApplicationName: ApplicationName
+    Environment: Environment
+    WorkloadName: WorkloadName
+    Location: Location
   }
 }
 
