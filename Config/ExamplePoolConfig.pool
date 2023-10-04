@@ -1,0 +1,4 @@
+Workload: avd
+Application: App1
+Location: westeurope
+Environment: Development

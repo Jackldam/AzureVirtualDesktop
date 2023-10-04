@@ -1,23 +1,14 @@
 @description('Required, Workload name')
-param WorkloadName string
+param KeyVaultName string
 
-@description('Required, Application name')
-param ApplicationName string
+@description('Location of the KeyVault. Defaults to the resource group location.')
+param Location string
 
-@description('Optional, Location')
-param Location string = resourceGroup().location
-
-@description('Required, Environment as per DTAP principal')
-@allowed([ 'd', 't', 'a', 'p' ])
-param Environment string
-
-@description('Required, Administrators securitygroup id')
+@description('Required, Administrators security group id')
 param AdministratorsGroupID string
 
-var KeyvaultName = '${WorkloadName}-${ApplicationName}-${Location}-${Environment}-kv'
-
-resource Keyvault 'Microsoft.KeyVault/vaults@2022-11-01' = {
-  name: KeyvaultName
+resource Keyvault 'Microsoft.KeyVault/vaults@2023-02-01' = {
+  name: KeyVaultName
   location: Location
   properties: {
     sku: {
@@ -29,8 +20,7 @@ resource Keyvault 'Microsoft.KeyVault/vaults@2022-11-01' = {
     enabledForTemplateDeployment: true
     enabledForDeployment: true
     enabledForDiskEncryption: true
-    enablePurgeProtection: false
-    enableSoftDelete: false
+    enableSoftDelete: true
     accessPolicies: [
       {
         tenantId: tenant().tenantId
@@ -38,18 +28,23 @@ resource Keyvault 'Microsoft.KeyVault/vaults@2022-11-01' = {
         permissions: {
           certificates: [
             'all'
+            'purge'
           ]
           keys: [
             'all'
           ]
           secrets: [
             'all'
+            'purge'
           ]
           storage: [
             'all'
+            'purge'
           ]
         }
       }
     ]
   }
 }
+
+output KeyvaultId string = Keyvault.id

@@ -1,0 +1,6 @@
+#Ignore .ConfigFiles
+*.config
+*.pool
+
+#Exclude Example's
+!Example*

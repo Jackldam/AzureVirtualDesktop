@@ -31,14 +31,3 @@ do {
 until ($ModulePath)
 
 $Env:PSModulePath = $Env:PSModulePath+";$($ModulePath.fullname)"
-
-##(Get-ChildItem -Path $ModulePath.FullName -Recurse -Depth 0 -Directory).FullName | ForEach-Object {
-##    
-##    if (!($_ -like "*\Az")) {
-##        Write-Host $_ -ForegroundColor Yellow
-##        Import-Module -Name $_ -Force
-##    }
-##
-##}
-
-#endregion
